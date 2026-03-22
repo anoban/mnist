@@ -2,10 +2,10 @@ cache-dir = "./.ruff_cache"
 fix = false
 fix-only = false
 indent-width = 4
-line-length = 120
+line-length = 140
 output-format = "full"
 respect-gitignore = false
-target-version = "py312"
+target-version = "py313"
 
 [format]
 docstring-code-format = true
