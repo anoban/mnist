@@ -1,9 +1,8 @@
 from typing import override
 
 import numpy as np
-from numpy.typing import NDArray
-
 import torch
+from numpy.typing import NDArray
 from torch.utils.data import Dataset
 
 __all__: tuple[str, ...] = ("IdxDataset",)
