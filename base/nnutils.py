@@ -4,11 +4,11 @@ from numpy.typing import NDArray
 
 np.seterr(all="raise")
 
-__all__ = ["ReLU", "softmax", "onehot", "undoReLU"]
+__all__ = ["relu", "softmax", "onehot", "undo_relu"]
 
 
 @jit(nopython=True, fastmath=True, parallel=False)  # type: ignore
-def ReLU(data: NDArray[np.float64]) -> NDArray[np.float64]:
+def relu(data: NDArray[np.float64]) -> NDArray[np.float64]:
     """
     Rectified Linear Unit: x if x > 0 else 0
 
@@ -32,7 +32,7 @@ def ReLU(data: NDArray[np.float64]) -> NDArray[np.float64]:
 @jit(nopython=True, fastmath=True, parallel=False)  # type: ignore
 def softmax(data: NDArray[np.float64]) -> NDArray[np.float64]:
     """
-    Softmax(x) : e is exponentiated to the elements of column vector (x), followed by an element-wise division by the sum of exponentiated
+    softmax(x) : e is exponentiated to the elements of column vector (x), followed by an element-wise division by the sum of exponentiated
     values.
 
     `Parameters`:
@@ -71,14 +71,14 @@ def onehot(labels: NDArray[np.float64]) -> NDArray[np.float64]:
         labels.max() - labels.min() + 1
     )  # defines the number of elements that should be in a column (number of rows)
     zeromat: NDArray[np.float64] = np.zeros(shape=(labels_range, labels.size), dtype=np.float64)
-    zeromat[labels.astype(np.uint64), np.arange(start=0, stop=labels.size, dtype=np.uint64)] = (
+    zeromat[labels.astype(np.uint64), np.arange(start=0, stop=labels.size, dtype=np.uint64)] = (  # type: ignore
         1.0000  # array subscript with two arrays doesn't work with Numba
     )
     return zeromat
 
 
 @jit(nopython=True, parallel=False, fastmath=True)  # type: ignore
-def undoReLU(activated_layer: NDArray[np.float64]) -> NDArray[np.float64]:
+def undo_relu(activated_layer: NDArray[np.float64]) -> NDArray[np.float64]:
     """
     `Returns` the derivative of ReLU activation results.
     Possible results are 0 and 1

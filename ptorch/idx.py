@@ -51,20 +51,20 @@ class IdxDataset(Dataset[torch.Tensor]):
         try:  # OPEN THE IDX1 FILE
             with open(file=idx1_filepath, mode="rb") as fp:
                 idx1_ubytes: NDArray[np.uint8] = np.fromfile(fp, dtype=np.uint8)
-        except FileNotFoundError as fnf_error:
-            raise RuntimeError(f"{idx1_filepath} is not found on this computer!") from fnf_error
+        except FileNotFoundError as err:
+            raise RuntimeError(f"{idx1_filepath} is not found on this computer!") from err
 
         try:  # OPEN THE IDX3 FILE
             with open(file=idx3_filepath, mode="rb") as fp:
                 idx3_ubytes: NDArray[np.uint8] = np.fromfile(fp, dtype=np.uint8)
-        except FileNotFoundError as fnf_error:
-            raise RuntimeError(f"{idx3_filepath} is not found on this computer!") from fnf_error
+        except FileNotFoundError as err:
+            raise RuntimeError(f"{idx3_filepath} is not found on this computer!") from err
 
         self.__idx1_magic: int = int.from_bytes(idx1_ubytes[:4], byteorder="big")  # idx1 magic number
         self.__idx1_count: int = int.from_bytes(idx1_ubytes[4:8], byteorder="big")  # count of the data elements (labels)
 
         assert (self.__idx1_count == idx1_ubytes.size - 8) and (self.__idx1_magic == 2049), (
-            f"There seems to be a parsing error or the binary file {idx1_filepath} is corrupted!"
+            f"there seems to be a parsing error or the binary file {idx1_filepath} is corrupted!"
         )
 
         self.__labels: torch.FloatTensor = torch.FloatTensor(
@@ -80,7 +80,7 @@ class IdxDataset(Dataset[torch.Tensor]):
 
         assert ((self.__idx3_count * self.__image_res[0] * self.__image_res[1]) == (idx3_ubytes.size - 16)) and (
             self.__idx3_magic == 2051
-        ), f"There seems to be a parsing error or the binary file {idx3_filepath} is corrupted!"
+        ), f"there seems to be a parsing error or the binary file {idx3_filepath} is corrupted!"
 
         # idx3 file stores data as bytes but we'll load in each byte as a 32 bit floats because np.exp() raises a FloatingPointError with np.uint8 type arrays
         self.__data: torch.FloatTensor = torch.FloatTensor(
@@ -88,7 +88,7 @@ class IdxDataset(Dataset[torch.Tensor]):
         )
 
         assert self.__idx1_count == self.__idx3_count, (
-            f"The pair of Idx1 and Idx3 files passed seem incompatible!, {idx3_filepath} has {self.__idx3_count} images while {idx1_filepath} has {self.__idx1_count} labels!"
+            f"the pair of Idx1 and Idx3 files passed are incompatible!, {idx3_filepath} has {self.__idx3_count} images while {idx1_filepath} has {self.__idx1_count} labels!"
         )
 
     @override

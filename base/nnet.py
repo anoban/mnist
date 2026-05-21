@@ -1,7 +1,7 @@
 from typing import override
 
 import numpy as np
-from nnutils import ReLU, onehot, softmax, undoReLU
+from nnutils import onehot, relu, softmax, undo_relu
 from numpy.typing import NDArray
 from sklearn.metrics import accuracy_score
 
@@ -95,7 +95,7 @@ class NNetworkMinimal:
 
             # activating H layer -> H_hat
             #    10 x N                                  10 x N
-            hidden_hat: NDArray[np.float64] = ReLU(hidden)
+            hidden_hat: NDArray[np.float64] = relu(hidden)
 
             # then, we compute the output layer
             #    10 x N                          10 x 10       10 x N          10 x 1
@@ -126,7 +126,7 @@ class NNetworkMinimal:
             # now we move on to transformation from the hidden layer to the input layer
             # first the ReLU activation needs to be undone
             #    10 x N                           10 x 10        10 x N
-            d_hidden: NDArray[np.float64] = self.__whidout.T.dot(d_out) * undoReLU(hidden_hat)
+            d_hidden: NDArray[np.float64] = self.__whidout.T.dot(d_out) * undo_relu(hidden_hat)
 
             # then compute how much the weights of the connexions between the input and hidden layers contributed to this.
             #    10 x 784                         10 x N    N x 784
@@ -172,7 +172,7 @@ class NNetworkMinimal:
         data_normed: NDArray[np.float64] = data / 255.00  # get a normalized copy of the incoming data
         # then we repeat the steps in forward propagation with learned weights and biases, to finally make the prediction
         H: NDArray[np.float64] = self.__winhid.dot(data_normed) + self.__bhid
-        H_hat: NDArray[np.float64] = ReLU(H)
+        H_hat: NDArray[np.float64] = relu(H)
         O: NDArray[np.float64] = self.__whidout.dot(H_hat) + self.__bout
         O_hat: NDArray[np.float64] = softmax(O)
         return np.argmax(O_hat, axis=0)  # O_hat is 10 x N shaped. the offset of the max value in each column will be the model's prediction
@@ -200,7 +200,7 @@ class NNetworkMinimal:
         data_normed: NDArray[np.float64] = data / 255.00  # get a normalized copy of the incoming data
         # then we repeat the steps in forward propagation with learned weights and biases, to finally make the prediction
         H: NDArray[np.float64] = self.__winhid.dot(data_normed) + self.__bhid
-        H_hat: NDArray[np.float64] = ReLU(H)
+        H_hat: NDArray[np.float64] = relu(H)
         O: NDArray[np.float64] = self.__whidout.dot(H_hat) + self.__bout
         O_hat: NDArray[np.float64] = softmax(O)
         predictions: NDArray[np.float64] = np.argmax(
