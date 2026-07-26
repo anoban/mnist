@@ -53,7 +53,7 @@ class Idx1:
     def __repr__(self) -> str:
         return f"Idx1 object(magic: {self.magic}, count: {self.count:,})"
 
-    def __getitem__(self, index: int) -> np.float64:  #
+    def __getitem__(self, index: int) -> np.float64:
         """
         `Parameters`:
         index: int - offset of the element to return from the labels array.
@@ -174,5 +174,4 @@ def peek_idx(idx3: str, idx1: str, image_dim: tuple[int, int] = (28, 28), colorm
         ax.set_title(f"{labels[idx]:1.0f}")  # remember the labels are now np.float64 s
         ax.set_xticks([])  # remove the x axis ticks and labels
         ax.set_yticks([])  # remove the y axis ticks and labels
-    plt.show()
-    return
+    plt.show()  # type: ignore

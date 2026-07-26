@@ -149,7 +149,7 @@ class NNetworkMinimal:
 
         # register that the model instance has been trained.
         self.__is_trained = True
-        print("")
+        print()
 
     def predict(self, data: NDArray[np.float64]) -> NDArray[np.int64]:
         """

@@ -3,7 +3,6 @@
 
 ___Project idea inspired from [Samson Zhang](https://www.youtube.com/watch?v=w8yWXqWQYmU). Design and implementation are quite different from the one in his [Kaggle Notebook](https://www.kaggle.com/code/wwsalmon/simple-mnist-nn-from-scratch-numpy-no-tf-keras/notebook) that___
 
-- Uses `Numba` to speed up the computations
 - Uses OOP to modularize code
 - Uses the real `MNIST` Idx data sets, instead of the Kaggle provided `.csv` files
 - Includes separate classes for handling `Idx1`, `Idx3` IO
@@ -15,44 +14,41 @@ ___Project idea inspired from [Samson Zhang](https://www.youtube.com/watch?v=w8y
 
 ![MNIST](./readme/MnistExamplesModified.png)
 
+<br>
+
 ___Outline of the `NNetworkMinimal` class training process___
 
-- The `NNetworkMinimal` class represents a very simple fully connected three layer neural network. The input layer has 784 neurons, each designated to handle one pixel from the training image.
-- The middle (aka hidden) layer has 10 neurons, fully connected to the input and output layers.
-- The output layer has 10 neurons, each registering the probability of the given image representing the n th digit (the digits (predictions) can be 0 through 9, hence the 10 neurons).
-- The training images are arrays of 28 x 28 black and white pixels (each one byte in size, with 0 mapping to black and 255 mapping to white).
-- The training happens in batches, so instead of processing each image (i.e an array of 28 x 28 pixels), we'll treat the N number of images as a matrix which embodies 28 x 28 rows and N columns.
-- In other words, in lieu of iteratively passing every image through all the layers (in both forward and backward propagations) we'll be passing arrays of images.
-- Here, the rows represent a select pixel from all the N images and a column holds all the 28 x 28 pixels of an image.
+- The `NNetworkMinimal` class represents a very simple fully connected three layer neural network ($I_{[784, N]} \Longrightarrow H_{[10, N]} \Longrightarrow O_{[10, N]}$).
 
-___The matrix can also be reimagined as a tensor with (28, 28, N) dimensions___
+    - The input layer has `784` neurons, each designated to handle one pixel from the training image (which is `28` x `28` in shape).
+    - The middle (aka hidden) layer has `10` neurons, fully connected to the input and output layers.
+    - The output layer has `10` neurons, each registering the probability of the given image representing the n th digit (the digits (predictions) can be `0` through `9`, hence the `10` neurons).
 
-----------------
-$`I_{[784, ~N]} \Longrightarrow H_{[10, ~N]} \Longrightarrow O_{[10, ~N]}`$
+- The training images are arrays of `28` x `28` black and white pixels (each one byte in size, with `0` mapping to black and `255` mapping to white).
 
-----------------
-___A matrix notation $`M_{[r,~c]}`$ indicates a matrix with `r` rows and `c` columns, not the matrix element at `r` th row and `c` th column!.___
+- The training happens in batches, so instead of processing each image (i.e an array of `784` pixels), we'll sample a batch of `N` images as a matrix which will have `784` a rows and `N` columns.
 
-----------------
+- In the mentioned $M_{[784,N]}$ matrix, each row represents a select pixel from all the `N` images and a column holds all the `784` pixels of a given image.
 
-___Forward propagation___
+### _1. Forward propagation_
+-------------
 
-$`H_{[10, ~N]} = W_{[784, ~10]} \cdot I_{[784, ~N]} + B_{[10, ~1]}`$
+$H_{[10, ~N]} = W_{[784, ~10]} \cdot I_{[784, ~N]} + B_{[10, ~1]}$
 The hidden layer is the product of weights of input layer nodes and
 
-$`{\hat{H}}_{[10, ~N]} = {f(H_{[10, ~N]})}`$
+${\hat{H}}_{[10, ~N]} = {f(H_{[10, ~N]})}$
 
-$`{\hat{H}}_{[10, N]} = {ReLU(H)}_{[10, N]}`$
+${\hat{H}}_{[10, N]} = {ReLU(H)}_{[10, N]}$
 
-$`ReLU(x): ~ x ~ if ~ (x > 0) ~ else ~ 0`$
+$ReLU(x): ~ x ~ if ~ (x > 0) ~ else ~ 0$
 
-$`{O}_{[10, N]} = {w}_{[10, 10]} \cdot {\hat{H}}_{[10, N]} + {b}_{[10, 1]}`$
+${O}_{[10, N]} = {w}_{[10, 10]} \cdot {\hat{H}}_{[10, N]} + {b}_{[10, 1]}$
 
-$`{\hat{O}}_{[10, N]} = {f_{softmax}(O)}_{[10, N]}`$
+${\hat{O}}_{[10, N]} = {f_{softmax}(O)}_{[10, N]}$
 
-$`softmax = \frac{e^O}{\sum_{j = 1}^{K} e_{j}^O}`$
+$softmax = \frac{e^O}{\sum_{j = 1}^{K} e_{j}^O}$
 
-$`softmax = ({\begin{bmatrix}
+$softmax = ({\begin{bmatrix}
 0.9 \\
 1.7 \\
 8.4 \\
@@ -60,7 +56,7 @@ $`softmax = ({\begin{bmatrix}
 2.1 \\
 8.5 \\
 9.1 \\
-\end{bmatrix}})_{[10, 1]}`$
+\end{bmatrix}})_{[10, 1]}$
 
 {\begin{bmatrix}
 0.10 \\
@@ -130,12 +126,12 @@ prediction = {\begin{bmatrix}
 ___Phase 3) Simultaneous paramater updates___
 
 
-_W = W - $`\alpha`$ dW_
-_B = B - $`\alpha`$ dB_
-_w = w - $`\alpha`$ dw_
-_b = b - $`\alpha`$ db_
+_W = W - $\alpha$ dW_
+_B = B - $\alpha$ dB_
+_w = w - $\alpha$ dw_
+_b = b - $\alpha$ db_
 
-$`\alpha`$ - learning rate
+$\alpha$ - learning rate
 
 ----------------
 After $5,000$ iterations, the accuracy scores for `MNIST` datasets were:

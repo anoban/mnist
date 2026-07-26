@@ -1,13 +1,11 @@
 import numpy as np
-from numba import jit  # type: ignore
 from numpy.typing import NDArray
 
 np.seterr(all="raise")
 
-__all__ = ["relu", "softmax", "onehot", "undo_relu"]
+__all__ = ["onehot", "relu", "softmax", "undo_relu"]
 
 
-@jit(nopython=True, fastmath=True, parallel=False)  # type: ignore
 def relu(data: NDArray[np.float64]) -> NDArray[np.float64]:
     """
     Rectified Linear Unit: x if x > 0 else 0
@@ -29,7 +27,6 @@ def relu(data: NDArray[np.float64]) -> NDArray[np.float64]:
     return np.maximum(data, 0.000)
 
 
-@jit(nopython=True, fastmath=True, parallel=False)  # type: ignore
 def softmax(data: NDArray[np.float64]) -> NDArray[np.float64]:
     """
     softmax(x) : e is exponentiated to the elements of column vector (x), followed by an element-wise division by the sum of exponentiated
@@ -77,7 +74,6 @@ def onehot(labels: NDArray[np.float64]) -> NDArray[np.float64]:
     return zeromat
 
 
-@jit(nopython=True, parallel=False, fastmath=True)  # type: ignore
 def undo_relu(activated_layer: NDArray[np.float64]) -> NDArray[np.float64]:
     """
     `Returns` the derivative of ReLU activation results.

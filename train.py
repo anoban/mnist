@@ -1,7 +1,6 @@
 import sys
 
 from base.idxutils import Idx1, Idx3
-
 from base.nnet import NNetworkMinimal
 
 
